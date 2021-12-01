@@ -25,10 +25,13 @@ module Packwerk
           privacy_option = reference.constant.package.enforce_privacy
           return false if enforcement_disabled?(privacy_option)
 
-          return false unless privacy_option == true ||
-            explicitly_private_constant?(reference.constant, explicitly_private_constants: privacy_option)
+          return true if privacy_option == true
 
-          true
+          explicitly_private_constants = privacy_option.map do |constant_name|
+            constant_name.start_with?("::") ? constant_name : "::#{constant_name}"
+          end
+
+          explicitly_private_constant?(reference.constant, explicitly_private_constants: explicitly_private_constants)
         end
 
         private

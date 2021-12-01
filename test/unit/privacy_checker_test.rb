@@ -73,6 +73,14 @@ module Packwerk
       checker.invalid_reference?(reference)
     end
 
+    test "assumes partially qualified constants are top level if enforcing for specific constants" do
+      destination_package = Package.new(name: "destination_package", config: { "enforce_privacy" => ["SomeName"] })
+      checker = privacy_checker
+      reference = build_reference(destination_package: destination_package)
+
+      assert checker.invalid_reference?(reference)
+    end
+
     private
 
     def privacy_checker
